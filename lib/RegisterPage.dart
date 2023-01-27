@@ -1,8 +1,8 @@
-import 'package:assignment1/loginPage.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'createColor.dart';
+import 'loginPage.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -52,7 +52,8 @@ class _RegisterPageState extends State<RegisterPage> {
                         padding: EdgeInsets.symmetric(vertical: 10),
                         child: TextFormField(
                             style: const TextStyle(
-                                color: Colors.white, fontWeight: FontWeight.bold),
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
                             keyboardType: TextInputType.name,
                             decoration: textFormDecoration("Name")),
                       ),
@@ -60,7 +61,8 @@ class _RegisterPageState extends State<RegisterPage> {
                         padding: EdgeInsets.symmetric(vertical: 10),
                         child: TextFormField(
                             style: const TextStyle(
-                                color: Colors.white, fontWeight: FontWeight.bold),
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
                             keyboardType: TextInputType.emailAddress,
                             decoration: textFormDecoration("Email")),
                       ),
@@ -68,7 +70,8 @@ class _RegisterPageState extends State<RegisterPage> {
                         padding: EdgeInsets.symmetric(vertical: 10),
                         child: TextFormField(
                             style: const TextStyle(
-                                color: Colors.white, fontWeight: FontWeight.bold),
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
                             keyboardType: TextInputType.phone,
                             decoration: textFormDecoration("Phone Number")),
                       ),
@@ -76,16 +79,21 @@ class _RegisterPageState extends State<RegisterPage> {
                           padding: EdgeInsets.symmetric(vertical: 10),
                           child: TextFormField(
                               obscureText: true,
-                              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
                               keyboardType: TextInputType.visiblePassword,
                               decoration: textFormDecoration("Password"))),
                       Container(
                           padding: EdgeInsets.symmetric(vertical: 10),
                           child: TextFormField(
                               obscureText: true,
-                              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
                               keyboardType: TextInputType.visiblePassword,
-                              decoration: textFormDecoration("Confirm Password")))
+                              decoration:
+                                  textFormDecoration("Confirm Password")))
                     ],
                   ),
                 ),
@@ -107,7 +115,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                   shape: MaterialStatePropertyAll(
                                       RoundedRectangleBorder(
                                           borderRadius:
-                                          BorderRadius.circular(20)))),
+                                              BorderRadius.circular(20)))),
                               child: const Text(
                                 "Sign Up",
                                 style: TextStyle(
@@ -124,7 +132,11 @@ class _RegisterPageState extends State<RegisterPage> {
                                   fontSize: 18,
                                   fontWeight: FontWeight.w500)),
                           onTap: () {
-                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const LoginPage(),));
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const LoginPage(),
+                                ));
                           },
                         ),
                       ),
@@ -139,13 +151,12 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-
-
   textFormDecoration(value) {
     return InputDecoration(
         fillColor: hexToColor(blackColor),
         filled: true,
-        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+        focusedBorder:
+            OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
         labelText: value,
         labelStyle: TextStyle(
@@ -153,11 +164,8 @@ class _RegisterPageState extends State<RegisterPage> {
             fontSize: 15,
             fontWeight: FontWeight.normal),
         suffixIcon: value == "Password" || value == "Confirm Password"
-            ? Icon(
-            FontAwesomeIcons.eyeSlash,
-            color: hexToColor(whiteColor),
-            size: 15)
+            ? Icon(FontAwesomeIcons.eyeSlash,
+                color: hexToColor(whiteColor), size: 15)
             : null);
   }
-
 }

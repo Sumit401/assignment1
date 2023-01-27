@@ -1,7 +1,7 @@
-import 'package:assignment1/RegisterPage.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import 'RegisterPage.dart';
 import 'createColor.dart';
 
 class LoginPage extends StatefulWidget {
@@ -58,7 +58,9 @@ class _LoginPageState extends State<LoginPage> {
                         padding: EdgeInsets.symmetric(vertical: 10),
                         child: TextFormField(
                             obscureText: true,
-                            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
                             keyboardType: TextInputType.visiblePassword,
                             decoration: textFormDecoration("Password"))),
                   ],
@@ -99,7 +101,10 @@ class _LoginPageState extends State<LoginPage> {
                                 fontSize: 18,
                                 fontWeight: FontWeight.w500)),
                         onTap: () {
-                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const RegisterPage()));
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const RegisterPage()));
                         },
                       ),
                     ),
@@ -117,7 +122,8 @@ class _LoginPageState extends State<LoginPage> {
     return InputDecoration(
         fillColor: hexToColor(blackColor),
         filled: true,
-        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+        focusedBorder:
+            OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
         labelText: value,
         labelStyle: TextStyle(
@@ -125,10 +131,8 @@ class _LoginPageState extends State<LoginPage> {
             fontSize: 15,
             fontWeight: FontWeight.normal),
         suffixIcon: value == "Password"
-            ? Icon(
-                FontAwesomeIcons.eyeSlash,
-                color: hexToColor(whiteColor),
-                size: 15)
+            ? Icon(FontAwesomeIcons.eyeSlash,
+                color: hexToColor(whiteColor), size: 15)
             : null);
   }
 }
