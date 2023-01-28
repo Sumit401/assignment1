@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 
 import 'RegisterPage.dart';
 import 'createColor.dart';
+import 'providers/loginPageProvider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -42,29 +44,42 @@ class _LoginPageState extends State<LoginPage> {
                   )
                 ],
               ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  children: [
-                    Container(
-                      padding: EdgeInsets.symmetric(vertical: 10),
-                      child: TextFormField(
-                          style: const TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.bold),
-                          keyboardType: TextInputType.emailAddress,
-                          decoration: textFormDecoration("Email/Phone No")),
+              Consumer<LoginProviders>(
+                builder: (context, providerValue, child) {
+                  return Container(
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
+                      children: [
+                        Container(
+                          padding: EdgeInsets.symmetric(vertical: 10),
+                          child: TextFormField(
+                              onChanged: (value) {
+                                providerValue.getEmail(value);
+                              },
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                              keyboardType: TextInputType.emailAddress,
+                              decoration: textFormDecoration(
+                                  "Email/Phone No", providerValue)),
+                        ),
+                        Container(
+                            padding: EdgeInsets.symmetric(vertical: 10),
+                            child: TextFormField(
+                                onChanged: (value) {
+                                  providerValue.getPassword(value);
+                                },
+                                obscureText: !providerValue.showPass,
+                                style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                                keyboardType: TextInputType.visiblePassword,
+                                decoration: textFormDecoration(
+                                    "Password", providerValue))),
+                      ],
                     ),
-                    Container(
-                        padding: EdgeInsets.symmetric(vertical: 10),
-                        child: TextFormField(
-                            obscureText: true,
-                            style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                            keyboardType: TextInputType.visiblePassword,
-                            decoration: textFormDecoration("Password"))),
-                  ],
-                ),
+                  );
+                },
               ),
               Container(
                 alignment: Alignment.center,
@@ -118,7 +133,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  textFormDecoration(value) {
+  textFormDecoration(value, LoginProviders providerValue) {
     return InputDecoration(
         fillColor: hexToColor(blackColor),
         filled: true,
@@ -131,8 +146,16 @@ class _LoginPageState extends State<LoginPage> {
             fontSize: 15,
             fontWeight: FontWeight.normal),
         suffixIcon: value == "Password"
-            ? Icon(FontAwesomeIcons.eyeSlash,
-                color: hexToColor(whiteColor), size: 15)
+            ? IconButton(
+                onPressed: () {
+                  providerValue.showPassword();
+                },
+                icon: providerValue.showPass == true
+                    ? Icon(FontAwesomeIcons.eye,
+                        color: hexToColor(whiteColor), size: 15)
+                    : Icon(FontAwesomeIcons.eyeSlash,
+                        color: hexToColor(whiteColor), size: 15),
+              )
             : null);
   }
 }
