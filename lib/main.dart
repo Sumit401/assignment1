@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'SplashScreen.dart';
+import 'Screens/splashScreen/SplashScreen.dart';
 import 'providers/loginPageProvider.dart';
 import 'providers/registerPageProviders.dart';
 import 'providers/timer.dart';
