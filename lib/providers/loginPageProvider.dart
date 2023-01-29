@@ -1,7 +1,8 @@
-import 'package:assignment1/json/LoginJSON.dart';
+
 import 'package:flutter/material.dart';
 
 import '../httpFiles/httpLogin.dart';
+import '../json/LoginJSON.dart';
 
 class LoginProviders extends ChangeNotifier {
   String email = "";
@@ -16,7 +17,7 @@ class LoginProviders extends ChangeNotifier {
   List<String>? errorMessage;
 
   Future<void> getLoginInfo() async {
-    loginJson = await LoginHttpRemote().getLoginData(email, password);
+    loginJson = await LoginHttpRemote().getLoginData(email.trim(), password);
 
     bool? data = loginJson?.data?.isNotEmpty;
     if (data ?? false) {

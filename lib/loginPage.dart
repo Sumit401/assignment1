@@ -1,4 +1,4 @@
-import 'package:assignment1/homepage.dart';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'RegisterPage.dart';
 import 'createColor.dart';
 import 'flutterToast.dart';
+import 'homepage.dart';
 import 'providers/loginPageProvider.dart';
 
 class LoginPage extends StatefulWidget {
@@ -49,11 +50,11 @@ class _LoginPageState extends State<LoginPage> {
               Consumer<LoginProviders>(
                 builder: (context, providerValue, child) {
                   return Container(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Column(
                       children: [
                         Container(
-                          padding: EdgeInsets.symmetric(vertical: 10),
+                          padding: const EdgeInsets.symmetric(vertical: 10),
                           child: TextFormField(
                               onChanged: (value) {
                                 providerValue.getEmail(value);
@@ -66,7 +67,7 @@ class _LoginPageState extends State<LoginPage> {
                                   "Email/Phone No", providerValue)),
                         ),
                         Container(
-                            padding: EdgeInsets.symmetric(vertical: 10),
+                            padding: const EdgeInsets.symmetric(vertical: 10),
                             child: TextFormField(
                                 onChanged: (value) {
                                   providerValue.getPassword(value);
@@ -78,6 +79,19 @@ class _LoginPageState extends State<LoginPage> {
                                 keyboardType: TextInputType.visiblePassword,
                                 decoration: textFormDecoration(
                                     "Password", providerValue))),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.only(top: 5),
+                              child: Text(
+                                "Forgot Password?",
+                                style: TextStyle(color: hexToColor(whiteColor)),
+                                textAlign: TextAlign.left,
+                              ),
+                            ),
+                          ],
+                        )
                       ],
                     ),
                   );
@@ -85,7 +99,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               Container(
                 alignment: Alignment.center,
-                margin: EdgeInsets.symmetric(horizontal: 70),
+                margin: const EdgeInsets.symmetric(horizontal: 70),
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -97,12 +111,13 @@ class _LoginPageState extends State<LoginPage> {
                           builder: (context, loginProvider, child) {
                             return ElevatedButton(
                                 onPressed: () async{
+                                  FocusScope.of(context).unfocus();
                                   await loginProvider.getLoginInfo();
                                   bool? status = loginProvider.requestStatus;
                                   if(status ?? false){
                                     print(loginProvider.statusMessage);
                                     print(loginProvider.accessToken);
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
+                                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomePage()));
                                   }else{
                                     flutterToast(loginProvider.statusMessage);
                                   }

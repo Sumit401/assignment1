@@ -4,11 +4,19 @@ import 'package:flutter/material.dart';
 
 class TimerProvider extends ChangeNotifier{
 
-  int timerData = 60;
+  int timerData = 45;
 
   void startTimer() {
-    Timer.periodic(Duration(seconds: 1), (timer) {
-      timerData--;
+    Timer.periodic(const Duration(seconds: 1), (timer) {
+      if(timerData>0) {
+        timerData--;
+        notifyListeners();
+      }else{
+        print("cancel");
+        timerData = -10;
+        timer.cancel();
+        notifyListeners();
+      }
       notifyListeners();
     });
     notifyListeners();

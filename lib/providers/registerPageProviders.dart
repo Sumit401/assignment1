@@ -1,9 +1,11 @@
-import 'package:assignment1/json/verifyOtp.dart';
 import 'package:flutter/material.dart';
 
 import '../httpFiles/httpRegister.dart';
+import '../httpFiles/httpResendOtp.dart';
 import '../httpFiles/httpverifyOtp.dart';
 import '../json/RegisterJSON.dart';
+import '../json/ResendOtp.dart';
+import '../json/verifyOtp.dart';
 
 class RegisterProvider extends ChangeNotifier {
   String name = "";
@@ -26,9 +28,11 @@ class RegisterProvider extends ChangeNotifier {
   String? otp3;
   String? otp4;
 
-
   VerifyOtp? verifyOtp;
+  bool? otpVerificationStatus;
+  String? otpVerificationMessage;
 
+  ResendOtp? resendOtp;
 
   void getName(value) {
     name = value;
@@ -73,26 +77,29 @@ class RegisterProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void getotp1(value){
-    otp1=value;
-    notifyListeners();
-  }
-  void getotp2(value){
-    otp2=value;
-    notifyListeners();
-  }
-  void getotp3(value){
-    otp3=value;
-    notifyListeners();
-  }
-  void getotp4(value){
-    otp4=value;
+  void getotp1(value) {
+    otp1 = value;
     notifyListeners();
   }
 
+  void getotp2(value) {
+    otp2 = value;
+    notifyListeners();
+  }
+
+  void getotp3(value) {
+    otp3 = value;
+    notifyListeners();
+  }
+
+  void getotp4(value) {
+    otp4 = value;
+    notifyListeners();
+  }
 
   Future<void> getRegisterInfo() async {
-    registerJson = await RegisterHttpRemote().getRegisterData(email, name, password, cnfPassword, phoneNo);
+    registerJson = await RegisterHttpRemote()
+        .getRegisterData(email.trim(), name.trim(), password, cnfPassword, phoneNo);
 
     bool? data = registerJson?.data?.isNotEmpty;
     if (data ?? false) {
@@ -105,12 +112,24 @@ class RegisterProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-
   Future<void> getverifyOtp() async {
-    if(otp1 != null && otp2 != null && otp3 != null && otp4 != null) {
-      verifyOtp = await VerifyOtpHttpRemote().getVerifyOtpData(otp1!+otp2!+otp3!+otp4!, accessToken ?? "");
-      print(verifyOtp?.status);
+    if (otp1 != null && otp2 != null && otp3 != null && otp4 != null) {
+      verifyOtp = await VerifyOtpHttpRemote()
+          .getVerifyOtpData(otp1! + otp2! + otp3! + otp4!, accessToken ?? "");
+      otpVerificationStatus = verifyOtp?.status;
+      otpVerificationMessage = verifyOtp?.message;
+
+      bool? data = verifyOtp?.data?.isNotEmpty;
+      if (data ?? false) {
+        verifyOtp?.data?[0].phone;
+        verifyOtp?.data?[0].phoneVerifiedAt;
+      }
     }
+    notifyListeners();
+  }
+
+  Future<void> resendOtpFunc() async {
+    resendOtp = await ResendOtpHttpRemote().getResendOtpData(accessToken ?? "");
     notifyListeners();
   }
 }

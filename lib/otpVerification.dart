@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'createColor.dart';
+import 'flutterToast.dart';
+import 'homepage.dart';
 import 'providers/registerPageProviders.dart';
 import 'providers/timer.dart';
 
@@ -51,7 +53,7 @@ class _OTPVerificationState extends State<OTPVerification> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
                           width: MediaQuery.of(context).size.width / 6,
                           child: Consumer<RegisterProvider>(
                             builder: (context, registerProvider, child) {
@@ -130,13 +132,43 @@ class _OTPVerificationState extends State<OTPVerification> {
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: Consumer<TimerProvider>(
-                      builder: (context, timerValue, child) {
-                        return Text("Resend OTP in ${timerValue.timerData} seconds",
-                            style: TextStyle(
-                                color: hexToColor(whiteColor),
-                                fontSize: 18,
-                                fontWeight: FontWeight.w300));
+                    child: Consumer2<TimerProvider,RegisterProvider>(
+                      builder: (context, timerValue, registerProvider, child) {
+                        if (timerValue.timerData > 0) {
+                          return RichText(
+                            text: TextSpan(
+                                text: "Resend OTP in ",
+                                style: TextStyle(
+                                    fontFamily: "Montserrat",
+                                    color: hexToColor(whiteColor),
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w300),
+                                children: [
+                                  TextSpan(
+                                      text: "${timerValue.timerData} seconds",
+                                      style: TextStyle(
+                                          fontFamily: "Montserrat",
+                                          color: hexToColor(redColor),
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w700))
+                                ]),
+                          );
+                        } else if(timerValue.timerData == 0) {
+                          registerProvider.resendOtpFunc();
+                          return Text(
+                              "Resending OTP",
+                              style: TextStyle(
+                                  color: hexToColor(whiteColor),
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w200));
+                        }else{
+                          return Text(
+                              "OTP Resent",
+                              style: TextStyle(
+                                  color: hexToColor(whiteColor),
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w200));
+                        }
                       },
                     ),
                   )
@@ -148,7 +180,18 @@ class _OTPVerificationState extends State<OTPVerification> {
                     builder: (context, registerProvider, child) {
                       return ElevatedButton(
                           onPressed: () async {
+                            FocusScope.of(context).unfocus();
                             await registerProvider.getverifyOtp();
+                            bool? status = registerProvider.otpVerificationStatus;
+                            if(status ?? false){
+                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomePage()));
+                            }else{
+                              if(registerProvider.otpVerificationMessage == "Bad Request") {
+                                flutterToast("Invalid OTP");
+                              }else{
+                                flutterToast(registerProvider.otpVerificationMessage);
+                              }
+                            }
                           },
                           style: ButtonStyle(
                               backgroundColor: MaterialStatePropertyAll(
@@ -156,13 +199,16 @@ class _OTPVerificationState extends State<OTPVerification> {
                               shape: MaterialStatePropertyAll(
                                   RoundedRectangleBorder(
                                       borderRadius:
-                                      BorderRadius.circular(10)))),
+                                          BorderRadius.circular(10)))),
                           child: const Padding(
-                            padding: EdgeInsets.symmetric(vertical: 10.0 , horizontal: 50),
+                            padding: EdgeInsets.symmetric(
+                                vertical: 10.0, horizontal: 50),
                             child: Text(
                               "Verify",
                               style: TextStyle(
-                                  fontSize: 22, fontWeight: FontWeight.bold, fontStyle: FontStyle.normal),
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold,
+                                  fontStyle: FontStyle.normal),
                             ),
                           ));
                     },
@@ -175,12 +221,13 @@ class _OTPVerificationState extends State<OTPVerification> {
       ),
     );
   }
+
   textFormDecoration() {
     return InputDecoration(
         fillColor: hexToColor(blackColor),
         filled: true,
         focusedBorder:
-        OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+            OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)));
   }
 }

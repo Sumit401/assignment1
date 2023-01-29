@@ -1,13 +1,15 @@
-import 'package:assignment1/flutterToast.dart';
-import 'package:assignment1/otpVerification.dart';
-import 'package:assignment1/providers/timer.dart';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 import 'createColor.dart';
+import 'flutterToast.dart';
 import 'loginPage.dart';
+import 'otpVerification.dart';
 import 'providers/registerPageProviders.dart';
+import 'providers/timer.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -84,8 +86,11 @@ class _RegisterPageState extends State<RegisterPage> {
                             padding: const EdgeInsets.symmetric(vertical: 10),
                             child: TextFormField(
                                 onChanged: (value) {
-                                  providerValue.getPhone(value);
+                                    providerValue.getPhone(value);
                                 },
+                                inputFormatters: [
+                                  LengthLimitingTextInputFormatter(10),
+                                ],
                                 style: const TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold),
@@ -136,13 +141,12 @@ class _RegisterPageState extends State<RegisterPage> {
                             builder: (context, providerValue,timerProvider, child) {
                               return ElevatedButton(
                                   onPressed: () async{
+                                    FocusScope.of(context).unfocus();
                                     await providerValue.getRegisterInfo();
                                     bool? status = providerValue.requestStatus;
                                     if(status ?? false){
-                                      print(providerValue.statusMessage);
-                                      print(providerValue.accessToken);
                                       timerProvider.startTimer();
-                                      Navigator.push(context, MaterialPageRoute(builder: (context) => OTPVerification(),));
+                                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => OTPVerification(),));
                                     }else{
                                       flutterToast(providerValue.errorMessage?.first);
                                     }
@@ -229,9 +233,9 @@ class _RegisterPageState extends State<RegisterPage> {
             providerValue.showPassword();
           },
           icon: providerValue.showPass == true
-              ? Icon(FontAwesomeIcons.eyeSlash,
+              ? Icon(FontAwesomeIcons.eye,
                   color: hexToColor(whiteColor), size: 15)
-              : Icon(FontAwesomeIcons.eye,
+              : Icon(FontAwesomeIcons.eyeSlash,
                   color: hexToColor(whiteColor), size: 15),
         ));
   }
@@ -253,9 +257,9 @@ class _RegisterPageState extends State<RegisterPage> {
             providerValue.showCnfPassword();
           },
           icon: providerValue.showCnfPass == true
-              ? Icon(FontAwesomeIcons.eyeSlash,
+              ? Icon(FontAwesomeIcons.eye,
                   color: hexToColor(whiteColor), size: 15)
-              : Icon(FontAwesomeIcons.eye,
+              : Icon(FontAwesomeIcons.eyeSlash,
                   color: hexToColor(whiteColor), size: 15),
         ));
   }

@@ -8,6 +8,7 @@ import 'providers/registerPageProviders.dart';
 import 'providers/timer.dart';
 
 void main() {
+
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (_) => LoginProviders()),
     ChangeNotifierProvider(create: (_) => RegisterProvider()),
@@ -20,6 +21,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    FocusScope.of(context).unfocus();
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(

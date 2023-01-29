@@ -9,7 +9,7 @@ class ResendOtpHttpRemote {
       "Authorization": "Bearer $auth"
     };
     var uri = Uri.parse("https://cinecompass.yuktidea.com/api/v1/otp/resend");
-    var client = await http.post(uri, headers: headers);
+    var client = await http.get(uri, headers: headers);
     print(client.body);
     return resendOtpFromJson(client.body);
   }

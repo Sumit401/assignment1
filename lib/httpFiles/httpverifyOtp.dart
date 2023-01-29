@@ -1,5 +1,7 @@
-import 'package:assignment1/json/verifyOtp.dart';
+
 import 'package:http/http.dart' as http;
+
+import '../json/verifyOtp.dart';
 
 class VerifyOtpHttpRemote {
   Future<VerifyOtp?> getVerifyOtpData(String otp, String auth) async {
