@@ -1,8 +1,10 @@
-import 'package:assignment1/providers/timer.dart';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'createColor.dart';
+import 'providers/registerPageProviders.dart';
+import 'providers/timer.dart';
 
 class OTPVerification extends StatefulWidget {
   const OTPVerification({Key? key}) : super(key: key);
@@ -49,68 +51,88 @@ class _OTPVerificationState extends State<OTPVerification> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
                           width: MediaQuery.of(context).size.width / 6,
-                          child: TextFormField(
-                            onChanged: (value) {
-                              FocusScope.of(context).nextFocus();
+                          child: Consumer<RegisterProvider>(
+                            builder: (context, registerProvider, child) {
+                              return TextFormField(
+                                  onChanged: (value) {
+                                    registerProvider.getotp1(value);
+                                    FocusScope.of(context).nextFocus();
+                                  },
+                                  textAlign: TextAlign.center,
+                                  maxLength: 1,
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                  keyboardType: TextInputType.number,
+                                  decoration: textFormDecoration());
                             },
-                              textAlign: TextAlign.center,
-                              maxLength: 1,
-                              style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
-                              keyboardType: TextInputType.number,
-                              decoration: textFormDecoration())),
-                      Container(
-                          padding: EdgeInsets.symmetric(horizontal: 10),
-                          width: MediaQuery.of(context).size.width / 6,
-                          child: TextFormField(
-                              onChanged: (value) {
-                                FocusScope.of(context).nextFocus();
-                              },
-                              textAlign: TextAlign.center,
-                              maxLength: 1,
-                              style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
-                              keyboardType: TextInputType.number,
-                              decoration: textFormDecoration())),
+                          )),
                       Container(
                           padding: const EdgeInsets.symmetric(horizontal: 10),
                           width: MediaQuery.of(context).size.width / 6,
-                          child: TextFormField(
-                              onChanged: (value) {
-                                FocusScope.of(context).nextFocus();
-                              },
-                              textAlign: TextAlign.center,
-                              maxLength: 1,
-                              style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
-                              keyboardType: TextInputType.number,
-                              decoration: textFormDecoration())),
+                          child: Consumer<RegisterProvider>(
+                            builder: (context, registerProvider, child) {
+                              return TextFormField(
+                                  onChanged: (value) {
+                                    registerProvider.getotp2(value);
+                                    FocusScope.of(context).nextFocus();
+                                  },
+                                  textAlign: TextAlign.center,
+                                  maxLength: 1,
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                  keyboardType: TextInputType.number,
+                                  decoration: textFormDecoration());
+                            },
+                          )),
                       Container(
-                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
                           width: MediaQuery.of(context).size.width / 6,
-                          child: TextFormField(
-                              onChanged: (value) {
-                                FocusScope.of(context).unfocus();
-                              },
-                              textAlign: TextAlign.center,
-                              maxLength: 1,
-                              style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
-                              keyboardType: TextInputType.number,
-                              decoration: textFormDecoration())),
+                          child: Consumer<RegisterProvider>(
+                            builder: (context, registerProvider, child) {
+                              return TextFormField(
+                                  onChanged: (value) {
+                                    registerProvider.getotp3(value);
+                                    FocusScope.of(context).nextFocus();
+                                  },
+                                  textAlign: TextAlign.center,
+                                  maxLength: 1,
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                  keyboardType: TextInputType.number,
+                                  decoration: textFormDecoration());
+                            },
+                          )),
+                      Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          width: MediaQuery.of(context).size.width / 6,
+                          child: Consumer<RegisterProvider>(
+                            builder: (context, registerProvider, child) {
+                              return TextFormField(
+                                  onChanged: (value) {
+                                    registerProvider.getotp4(value);
+                                    FocusScope.of(context).unfocus();
+                                  },
+                                  textAlign: TextAlign.center,
+                                  maxLength: 1,
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                  keyboardType: TextInputType.number,
+                                  decoration: textFormDecoration());
+                            },
+                          )),
                     ],
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     child: Consumer<TimerProvider>(
-                      builder: (context, value, child) {
-                        return Text("Resend OTP in ${value.timerData} seconds",
+                      builder: (context, timerValue, child) {
+                        return Text("Resend OTP in ${timerValue.timerData} seconds",
                             style: TextStyle(
                                 color: hexToColor(whiteColor),
                                 fontSize: 18,
@@ -122,23 +144,29 @@ class _OTPVerificationState extends State<OTPVerification> {
               ),
               Column(
                 children: [
-                  ElevatedButton(
-                      onPressed: () => null,
-                      style: ButtonStyle(
-                          backgroundColor: MaterialStatePropertyAll(
-                              hexToColor(redColor)),
-                          shape: MaterialStatePropertyAll(
-                              RoundedRectangleBorder(
-                                  borderRadius:
-                                  BorderRadius.circular(10)))),
-                      child: const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 10.0 , horizontal: 50),
-                        child: Text(
-                          "Verify",
-                          style: TextStyle(
-                              fontSize: 22, fontWeight: FontWeight.bold, fontStyle: FontStyle.normal),
-                        ),
-                      )),
+                  Consumer<RegisterProvider>(
+                    builder: (context, registerProvider, child) {
+                      return ElevatedButton(
+                          onPressed: () async {
+                            await registerProvider.getverifyOtp();
+                          },
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStatePropertyAll(
+                                  hexToColor(redColor)),
+                              shape: MaterialStatePropertyAll(
+                                  RoundedRectangleBorder(
+                                      borderRadius:
+                                      BorderRadius.circular(10)))),
+                          child: const Padding(
+                            padding: EdgeInsets.symmetric(vertical: 10.0 , horizontal: 50),
+                            child: Text(
+                              "Verify",
+                              style: TextStyle(
+                                  fontSize: 22, fontWeight: FontWeight.bold, fontStyle: FontStyle.normal),
+                            ),
+                          ));
+                    },
+                  ),
                 ],
               ),
             ],

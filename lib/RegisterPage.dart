@@ -145,8 +145,6 @@ class _RegisterPageState extends State<RegisterPage> {
                                       Navigator.push(context, MaterialPageRoute(builder: (context) => OTPVerification(),));
                                     }else{
                                       flutterToast(providerValue.errorMessage?.first);
-                                      timerProvider.startTimer();
-                                      Navigator.push(context, MaterialPageRoute(builder: (context) => OTPVerification(),));
                                     }
                                   },
                                   style: buttonStyle(),

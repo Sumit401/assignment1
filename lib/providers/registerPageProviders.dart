@@ -1,10 +1,11 @@
+import 'package:assignment1/json/verifyOtp.dart';
 import 'package:flutter/material.dart';
 
 import '../httpFiles/httpRegister.dart';
+import '../httpFiles/httpverifyOtp.dart';
 import '../json/RegisterJSON.dart';
 
 class RegisterProvider extends ChangeNotifier {
-
   String name = "";
   String email = "";
   String phoneNo = "";
@@ -14,29 +15,19 @@ class RegisterProvider extends ChangeNotifier {
   bool showPass = false;
   bool showCnfPass = false;
 
-  RegisterJson? register;
+  RegisterJson? registerJson;
   bool? requestStatus;
   String? statusMessage;
   String? accessToken;
   List<String>? errorMessage;
 
+  String? otp1;
+  String? otp2;
+  String? otp3;
+  String? otp4;
 
-  Future<void> getRegisterInfo() async {
 
-    if(name != "" && email !="" && password != "" && cnfPassword != "" && phoneNo != "") {
-      register = await RegisterHttpRemote().getRegisterData(email,name,password,cnfPassword,phoneNo);
-
-      bool? data = register?.data?.isNotEmpty;
-      if(data ?? false) {
-        accessToken = register?.data?[0].accessToken;
-      }
-
-      requestStatus = register?.status;
-      statusMessage = register?.message;
-      errorMessage = register?.error;
-    }
-    notifyListeners();
-  }
+  VerifyOtp? verifyOtp;
 
 
   void getName(value) {
@@ -78,6 +69,47 @@ class RegisterProvider extends ChangeNotifier {
       showCnfPass = true;
     } else {
       showCnfPass = false;
+    }
+    notifyListeners();
+  }
+
+  void getotp1(value){
+    otp1=value;
+    notifyListeners();
+  }
+  void getotp2(value){
+    otp2=value;
+    notifyListeners();
+  }
+  void getotp3(value){
+    otp3=value;
+    notifyListeners();
+  }
+  void getotp4(value){
+    otp4=value;
+    notifyListeners();
+  }
+
+
+  Future<void> getRegisterInfo() async {
+    registerJson = await RegisterHttpRemote().getRegisterData(email, name, password, cnfPassword, phoneNo);
+
+    bool? data = registerJson?.data?.isNotEmpty;
+    if (data ?? false) {
+      accessToken = registerJson?.data?[0].accessToken;
+    }
+
+    requestStatus = registerJson?.status;
+    statusMessage = registerJson?.message;
+    errorMessage = registerJson?.error;
+    notifyListeners();
+  }
+
+
+  Future<void> getverifyOtp() async {
+    if(otp1 != null && otp2 != null && otp3 != null && otp4 != null) {
+      verifyOtp = await VerifyOtpHttpRemote().getVerifyOtpData(otp1!+otp2!+otp3!+otp4!, accessToken ?? "");
+      print(verifyOtp?.status);
     }
     notifyListeners();
   }

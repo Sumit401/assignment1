@@ -1,13 +1,11 @@
-import 'package:assignment1/RegisterPage.dart';
-import 'package:assignment1/loginPage.dart';
-import 'package:assignment1/otpVerification.dart';
-import 'package:assignment1/providers/timer.dart';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'SplashScreen.dart';
 import 'providers/loginPageProvider.dart';
 import 'providers/registerPageProviders.dart';
+import 'providers/timer.dart';
 
 void main() {
   runApp(MultiProvider(providers: [
@@ -29,7 +27,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       debugShowCheckedModeBanner: false,
-      home: const RegisterPage(),
+      home: const SplashScreen(),
     );
   }
 }

@@ -13,10 +13,7 @@ class RegisterHttpRemote {
     };
     var uri = Uri.parse("https://cinecompass.yuktidea.com/api/v1/register");
     var client = await http.post(uri,body: body);
-    if (client.statusCode == 200||client.statusCode == 400) {
-      var json = client.body;
-      return registerJsonFromJson(json);
-    }
-      return null;
+    print(client.body);
+    return registerJsonFromJson(client.body);
   }
 }

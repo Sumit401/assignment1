@@ -1,9 +1,11 @@
+import 'package:assignment1/homepage.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 import 'RegisterPage.dart';
 import 'createColor.dart';
+import 'flutterToast.dart';
 import 'providers/loginPageProvider.dart';
 
 class LoginPage extends StatefulWidget {
@@ -91,20 +93,34 @@ class _LoginPageState extends State<LoginPage> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        ElevatedButton(
-                            onPressed: () => null,
-                            style: ButtonStyle(
-                                backgroundColor: MaterialStatePropertyAll(
-                                    hexToColor(redColor)),
-                                shape: MaterialStatePropertyAll(
-                                    RoundedRectangleBorder(
-                                        borderRadius:
+                        Consumer<LoginProviders>(
+                          builder: (context, loginProvider, child) {
+                            return ElevatedButton(
+                                onPressed: () async{
+                                  await loginProvider.getLoginInfo();
+                                  bool? status = loginProvider.requestStatus;
+                                  if(status ?? false){
+                                    print(loginProvider.statusMessage);
+                                    print(loginProvider.accessToken);
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
+                                  }else{
+                                    flutterToast(loginProvider.statusMessage);
+                                  }
+                                },
+                                style: ButtonStyle(
+                                    backgroundColor: MaterialStatePropertyAll(
+                                        hexToColor(redColor)),
+                                    shape: MaterialStatePropertyAll(
+                                        RoundedRectangleBorder(
+                                            borderRadius:
                                             BorderRadius.circular(20)))),
-                            child: const Text(
-                              "Login",
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
-                            )),
+                                child: const Text(
+                                  "Login",
+                                  style: TextStyle(
+                                      fontSize: 18, fontWeight: FontWeight.bold),
+                                ));
+                          },
+                        ),
                       ],
                     ),
                     Padding(
