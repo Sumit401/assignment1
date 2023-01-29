@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../httpFiles/httpRegister.dart';
+import '../json/RegisterJSON.dart';
+
 class RegisterProvider extends ChangeNotifier {
 
   String name = "";
@@ -10,6 +13,31 @@ class RegisterProvider extends ChangeNotifier {
 
   bool showPass = false;
   bool showCnfPass = false;
+
+  RegisterJson? register;
+  bool? requestStatus;
+  String? statusMessage;
+  String? accessToken;
+  List<String>? errorMessage;
+
+
+  Future<void> getRegisterInfo() async {
+
+    if(name != "" && email !="" && password != "" && cnfPassword != "" && phoneNo != "") {
+      register = await RegisterHttpRemote().getRegisterData(email,name,password,cnfPassword,phoneNo);
+
+      bool? data = register?.data?.isNotEmpty;
+      if(data ?? false) {
+        accessToken = register?.data?[0].accessToken;
+      }
+
+      requestStatus = register?.status;
+      statusMessage = register?.message;
+      errorMessage = register?.error;
+    }
+    notifyListeners();
+  }
+
 
   void getName(value) {
     name = value;

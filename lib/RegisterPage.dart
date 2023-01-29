@@ -1,3 +1,6 @@
+import 'package:assignment1/flutterToast.dart';
+import 'package:assignment1/otpVerification.dart';
+import 'package:assignment1/providers/timer.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -22,7 +25,7 @@ class _RegisterPageState extends State<RegisterPage> {
           height: MediaQuery.of(context).size.height,
           decoration: BoxDecoration(color: hexToColor(greyColor)),
           child: Container(
-            margin: EdgeInsets.symmetric(vertical: 50),
+            margin: const EdgeInsets.symmetric(vertical: 50),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -49,11 +52,11 @@ class _RegisterPageState extends State<RegisterPage> {
                 Consumer<RegisterProvider>(
                   builder: (context, providerValue, child) {
                     return Container(
-                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: Column(
                         children: [
                           Container(
-                            padding: EdgeInsets.symmetric(vertical: 10),
+                            padding: const EdgeInsets.symmetric(vertical: 10),
                             child: TextFormField(
                                 onChanged: (value) {
                                   providerValue.getName(value);
@@ -66,7 +69,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 decoration: textFormDecoration("Name")),
                           ),
                           Container(
-                            padding: EdgeInsets.symmetric(vertical: 10),
+                            padding: const EdgeInsets.symmetric(vertical: 10),
                             child: TextFormField(
                                 onChanged: (value) {
                                   providerValue.getEmail(value);
@@ -78,7 +81,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 decoration: textFormDecoration("Email")),
                           ),
                           Container(
-                            padding: EdgeInsets.symmetric(vertical: 10),
+                            padding: const EdgeInsets.symmetric(vertical: 10),
                             child: TextFormField(
                                 onChanged: (value) {
                                   providerValue.getPhone(value);
@@ -90,7 +93,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 decoration: textFormDecoration("Phone Number")),
                           ),
                           Container(
-                              padding: EdgeInsets.symmetric(vertical: 10),
+                              padding: const EdgeInsets.symmetric(vertical: 10),
                               child: TextFormField(
                                   onChanged: (value) {
                                     providerValue.getPassword(value);
@@ -103,7 +106,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                   decoration: textFormDecorationPassword(
                                       providerValue))),
                           Container(
-                              padding: EdgeInsets.symmetric(vertical: 10),
+                              padding: const EdgeInsets.symmetric(vertical: 10),
                               child: TextFormField(
                                   onChanged: (value) {
                                     providerValue.getCnfPassword(value);
@@ -113,8 +116,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold),
                                   keyboardType: TextInputType.visiblePassword,
-                                  decoration: textFormDecorationCnfPassword(
-                                      providerValue)))
+                                  decoration: textFormDecorationCnfPassword(providerValue)))
                         ],
                       ),
                     );
@@ -122,7 +124,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
                 Container(
                   alignment: Alignment.center,
-                  margin: EdgeInsets.symmetric(horizontal: 70),
+                  margin: const EdgeInsets.symmetric(horizontal: 70),
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -130,30 +132,54 @@ class _RegisterPageState extends State<RegisterPage> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          ElevatedButton(
-                              onPressed: () => null,
-                              style: ButtonStyle(
-                                  backgroundColor: MaterialStatePropertyAll(
-                                      hexToColor(redColor)),
-                                  shape: MaterialStatePropertyAll(
-                                      RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(20)))),
-                              child: const Text(
-                                "Sign Up",
-                                style: TextStyle(
-                                    fontSize: 18, fontWeight: FontWeight.bold),
-                              )),
+                          Consumer2<RegisterProvider,TimerProvider>(
+                            builder: (context, providerValue,timerProvider, child) {
+                              return ElevatedButton(
+                                  onPressed: () async{
+                                    await providerValue.getRegisterInfo();
+                                    bool? status = providerValue.requestStatus;
+                                    if(status ?? false){
+                                      print(providerValue.statusMessage);
+                                      print(providerValue.accessToken);
+                                      timerProvider.startTimer();
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => OTPVerification(),));
+                                    }else{
+                                      flutterToast(providerValue.errorMessage?.first);
+                                      timerProvider.startTimer();
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => OTPVerification(),));
+                                    }
+                                  },
+                                  style: buttonStyle(),
+                                  child: const Text(
+                                    "Sign Up",
+                                    style: TextStyle(
+                                        fontSize: 18, fontWeight: FontWeight.bold),
+                                  ));
+                            }
+                          ),
                         ],
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 10),
                         child: InkWell(
-                          child: Text("Already have an account? Login",
-                              style: TextStyle(
-                                  color: hexToColor(whiteColor),
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w500)),
+                          child: RichText(
+                            text: TextSpan(
+                                text: "Already have an account?",
+                                style: TextStyle(
+                                    color: hexToColor(whiteColor),
+                                    fontSize: 18,
+                                    fontFamily: "Montserrat",
+                                    fontWeight: FontWeight.w500),
+                                children: [
+                                  TextSpan(
+                                      text: " Login",
+                                      style: TextStyle(
+                                          color: hexToColor(redColor),
+                                          fontSize: 18,
+                                          fontFamily: "Montserrat",
+                                          fontWeight: FontWeight.w700))
+                                ]),
+                          ),
                           onTap: () {
                             Navigator.pushReplacement(
                                 context,
@@ -234,5 +260,15 @@ class _RegisterPageState extends State<RegisterPage> {
               : Icon(FontAwesomeIcons.eye,
                   color: hexToColor(whiteColor), size: 15),
         ));
+  }
+
+  buttonStyle() {
+    return ButtonStyle(
+        backgroundColor: MaterialStatePropertyAll(
+            hexToColor(redColor)),
+        shape: MaterialStatePropertyAll(
+            RoundedRectangleBorder(
+                borderRadius:
+                BorderRadius.circular(20))));
   }
 }
