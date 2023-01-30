@@ -1,7 +1,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../providers/Httpprovider.dart';
 import '../../providers/registerPageProviders.dart';
 import '../../reusableWidgets/alertDialogLoading.dart';
 import '../../reusableWidgets/createColor.dart';
@@ -9,23 +11,30 @@ import '../../reusableWidgets/flutterToast.dart';
 import '../homeScreen/homepage.dart';
 
 verifyOtpButton() {
-  return Consumer<RegisterProvider>(
-    builder: (context, registerProvider, child) {
+  return Consumer2<HTTPProvider,RegisterProvider>(
+    builder: (context, httpProvider,registerProvider, child) {
       return ElevatedButton(
           onPressed: () async {
             alertDialogLoading(context);
             FocusScope.of(context).unfocus();
-            await registerProvider.getverifyOtp();
-            bool? status = registerProvider.otpVerificationStatus;
-            if (status ?? false) {
-              Navigator.pop(context);
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomePage()));
-            } else {
-              Navigator.pop(context);
-              if (registerProvider.otpVerificationMessage == "Bad Request") {
-                flutterToast("Invalid OTP");
+            SharedPreferences preferences = await SharedPreferences.getInstance();
+            while (true) {
+              await httpProvider.getverifyOtp(registerProvider.otp1,registerProvider.otp2,registerProvider.otp3,registerProvider.otp4);
+              bool? status = httpProvider.otpVerificationStatus;
+              if (status ?? false) {
+                preferences.setString("userID", registerProvider.email);
+                preferences.setString("password", registerProvider.password);
+                Navigator.pop(context);
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomePage()));
+                break;
               } else {
-                flutterToast(registerProvider.otpVerificationMessage);
+                if (httpProvider.otpVerificationMessage == "Bad Request") {
+                  flutterToast("Invalid OTP");
+                  Navigator.pop(context);
+                  break;
+                } else if (httpProvider.otpVerificationMessage == "Token has expired") {
+                  await httpProvider.refreshTokenFunction();
+                }
               }
             }
           },

@@ -1,18 +1,18 @@
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'Screens/splashScreen/SplashScreen.dart';
+import 'providers/Httpprovider.dart';
 import 'providers/loginPageProvider.dart';
 import 'providers/registerPageProviders.dart';
 import 'providers/timer.dart';
 
 void main() {
-
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (_) => LoginProviders()),
     ChangeNotifierProvider(create: (_) => RegisterProvider()),
     ChangeNotifierProvider(create: (_) => TimerProvider()),
+    ChangeNotifierProvider(create: (_) => HTTPProvider()),
   ], child: const MyApp()));
 }
 

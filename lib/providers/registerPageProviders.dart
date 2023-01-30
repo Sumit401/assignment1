@@ -1,12 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../httpFiles/httpRegister.dart';
-import '../httpFiles/httpResendOtp.dart';
-import '../httpFiles/httpverifyOtp.dart';
-import '../json/RegisterJSON.dart';
-import '../json/ResendOtp.dart';
-import '../json/verifyOtp.dart';
-
 class RegisterProvider extends ChangeNotifier {
   String name = "";
   String email = "";
@@ -17,22 +10,10 @@ class RegisterProvider extends ChangeNotifier {
   bool showPass = false;
   bool showCnfPass = false;
 
-  RegisterJson? registerJson;
-  bool? requestStatus;
-  String? statusMessage;
-  String? accessToken;
-  List<String>? errorMessage;
-
   String? otp1;
   String? otp2;
   String? otp3;
   String? otp4;
-
-  VerifyOtp? verifyOtp;
-  bool? otpVerificationStatus;
-  String? otpVerificationMessage;
-
-  ResendOtp? resendOtp;
 
   void getName(value) {
     name = value;
@@ -94,42 +75,6 @@ class RegisterProvider extends ChangeNotifier {
 
   void getotp4(value) {
     otp4 = value;
-    notifyListeners();
-  }
-
-  Future<void> getRegisterInfo() async {
-    registerJson = await RegisterHttpRemote()
-        .getRegisterData(email.trim(), name.trim(), password, cnfPassword, phoneNo);
-
-    bool? data = registerJson?.data?.isNotEmpty;
-    if (data ?? false) {
-      accessToken = registerJson?.data?[0].accessToken;
-    }
-
-    requestStatus = registerJson?.status;
-    statusMessage = registerJson?.message;
-    errorMessage = registerJson?.error;
-    notifyListeners();
-  }
-
-  Future<void> getverifyOtp() async {
-    if (otp1 != null && otp2 != null && otp3 != null && otp4 != null) {
-      verifyOtp = await VerifyOtpHttpRemote()
-          .getVerifyOtpData(otp1! + otp2! + otp3! + otp4!, accessToken ?? "");
-      otpVerificationStatus = verifyOtp?.status;
-      otpVerificationMessage = verifyOtp?.message;
-
-      bool? data = verifyOtp?.data?.isNotEmpty;
-      if (data ?? false) {
-        verifyOtp?.data?[0].phone;
-        verifyOtp?.data?[0].phoneVerifiedAt;
-      }
-    }
-    notifyListeners();
-  }
-
-  Future<void> resendOtpFunc() async {
-    resendOtp = await ResendOtpHttpRemote().getResendOtpData(accessToken ?? "");
     notifyListeners();
   }
 }

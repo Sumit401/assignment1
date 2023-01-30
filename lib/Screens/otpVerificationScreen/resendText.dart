@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../providers/registerPageProviders.dart';
+import '../../providers/Httpprovider.dart';
 import '../../providers/timer.dart';
 import '../../reusableWidgets/createColor.dart';
 
 resendOTPText() {
   return Padding(
     padding: const EdgeInsets.symmetric(vertical: 10),
-    child: Consumer2<TimerProvider, RegisterProvider>(
-      builder: (context, timerValue, registerProvider, child) {
+    child: Consumer2<TimerProvider, HTTPProvider>(
+      builder: (context, timerValue, httpProvider, child) {
         if (timerValue.timerData > 0) {
           return timerText(timerValue);
         } else if (timerValue.timerData == 0) {
-          registerProvider.resendOtpFunc();
+          httpProvider.resendOtpFunc();
           return otpResentText();
         } else {
           return otpResentText();

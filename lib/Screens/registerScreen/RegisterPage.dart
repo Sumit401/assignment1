@@ -1,9 +1,8 @@
-import 'package:assignment1/Screens/registerScreen/registerButton.dart';
 import 'package:flutter/material.dart';
-
 
 import '../../reusableWidgets/createColor.dart';
 import 'alreadyRegistered.dart';
+import 'registerButton.dart';
 import 'textFieldWidgets.dart';
 import 'textWidgets.dart';
 
@@ -51,10 +50,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      registerButton(),
-                      alreadyRegistered(context)
-                    ],
+                    children: [registerButton(), alreadyRegistered(context)],
                   ),
                 ),
               ],

@@ -4,6 +4,8 @@ import '../json/LoginJSON.dart';
 
 class LoginHttpRemote {
   Future<LoginJson?> getLoginData(String email, String password) async {
+    print(email);
+    print(password);
     Map<String, dynamic> body = {
       "login": email,
       "password": password,
@@ -11,6 +13,7 @@ class LoginHttpRemote {
     var uri = Uri.parse("https://cinecompass.yuktidea.com/api/v1/login/");
     var client = await http.post(uri, body: body);
     var json = client.body;
+    print(client.body);
     return loginJsonFromJson(json);
   }
 }

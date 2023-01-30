@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../reusableWidgets/createColor.dart';
+import 'deleteUserButton.dart';
 import 'widgets.dart';
 
 class HomePage extends StatefulWidget {
@@ -19,9 +20,11 @@ class _HomePageState extends State<HomePage> {
         height: MediaQuery.of(context).size.height,
         color: hexToColor(blackColor),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             imageContainer(),
             textContainer(),
+            deleteUserButton(),
           ],
         ),
       ),
