@@ -26,7 +26,7 @@ deleteUserButton() {
                 break;
               } else {
                 if (httpProvider.deleteUser?.message == "Token has expired") {
-                  httpProvider.refreshTokenFunction();
+                  await httpProvider.refreshTokenFunction();
                 } else if (httpProvider.deleteUser?.message == "Phone not verified") {
                   flutterToast("Your Phone number is not verified");
                   Navigator.pop(context);
